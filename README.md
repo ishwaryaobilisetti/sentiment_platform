@@ -1,40 +1,179 @@
-📊 Sentiment Intelligence Platform
-A real-time dashboard that visualizes social media sentiment trends using FastAPI, React, PostgreSQL, and WebSockets. This platform analyzes incoming posts and provides live updates on sentiment distribution and cumulative growth trends.
+# 📊 Sentiment Intelligence Platform
 
-🚀 Key Features
-Real-time Dashboard: Live-updating charts and feeds using WebSockets.
+This project is a real-time sentiment analysis platform that processes social media–style posts, analyzes sentiment and emotions using AI models, and displays live insights on a web dashboard.
 
-Sentiment Distribution: Pie chart visualization of overall sentiment (Positive, Negative, Neutral).
+The system is built using a microservice architecture and is fully containerized using Docker Compose. It is designed to simulate real-world sentiment monitoring systems used by companies for brand and product analysis.
 
-Growth Trends: Cumulative line charts tracking sentiment activity over time.
+---
 
-Broadcasting System: An internal API endpoint for workers to push data to all connected clients.
+## ✨ Features
 
-Stat Summary: Quick-glance counters for total posts and sentiment categories.
+* Real-time ingestion of social media posts
+* Sentiment classification: **Positive / Negative / Neutral**
+* Emotion detection: **Joy, Anger, Sadness, Fear, Surprise, Neutral**
+* Live dashboard updates using WebSockets
+* Redis Streams–based message queue
+* Persistent storage with PostgreSQL
+* One-command startup using Docker Compose
 
-🛠️ Tech Stack
-Backend: FastAPI (Python), SQLAlchemy (Async), Uvicorn.
+---
 
-Frontend: React (Vite), Chart.js, React-Chartjs-2.
+## 🧱 Architecture Overview
 
-Database: PostgreSQL.
+The platform consists of **exactly six containerized services**:
 
-Containerization: Docker & Docker Compose.
+1. Frontend (React)
+2. Backend API (FastAPI)
+3. Worker service (AI processing)
+4. Ingester service (data generation)
+5. Redis (Streams)
+6. PostgreSQL (database)
 
-🚦 Getting Started
-1. Prerequisites
-Docker & Docker Compose installed.
+A detailed system design and data flow explanation is available in **ARCHITECTURE.md**.
 
-Python 3.10+ (for local testing).
+---
 
-2. Launch the Platform
-From the root directory, run:
+## 🛠 Tech Stack
 
-Bash
+### Backend
 
-docker compose up --build
-The services will be available at:
+* FastAPI (Python)
+* Async SQLAlchemy
+* Hugging Face Transformers
 
-Frontend: http://localhost:3000 
+### Frontend
 
-Backend API: http://localhost:8000
+* React 18 (Vite)
+* Charting libraries
+* WebSockets
+
+### Infrastructure
+
+* PostgreSQL 15
+* Redis 7 (Streams)
+* Docker & Docker Compose
+
+---
+
+## 📦 Prerequisites
+
+Before running the project, make sure you have:
+
+* Docker 20.10 or later
+* Docker Compose 2.x
+* At least **4 GB RAM**
+* Ports **3000** and **8000** available
+
+---
+
+## ⚙️ Environment Configuration
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+The `.env` file contains runtime configuration such as database credentials, Redis settings, and model configuration.
+
+⚠️ **Important notes**
+
+* Do **not** commit `.env` to GitHub
+* Only `.env.example` should be included in the repository
+* No real secrets should be stored in version control
+
+---
+
+## ▶️ Running the Application
+
+From the project root directory:
+
+```bash
+docker-compose up -d
+```
+
+Check that all services are running:
+
+```bash
+docker-compose ps
+```
+
+All six services should be in the **Up** state.
+
+---
+
+## 🌐 Accessing the Application
+
+* Frontend Dashboard:
+  [http://localhost:3000](http://localhost:3000)
+
+* Backend API:
+  [http://localhost:8000](http://localhost:8000)
+
+* API Documentation (Swagger UI):
+  [http://localhost:8000/docs](http://localhost:8000/docs)
+
+* Health Check Endpoint:
+  [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+---
+
+## 🧪 Testing
+
+Backend tests are written using **pytest**.
+
+Run tests:
+
+```bash
+docker-compose exec backend pytest -v
+```
+
+Check test coverage:
+
+```bash
+docker-compose exec backend pytest --cov=backend
+```
+
+Minimum required backend coverage: **70%**
+
+---
+
+## 🛑 Stopping the Application
+
+To stop all services:
+
+```bash
+docker-compose down
+```
+
+Data stored in PostgreSQL will persist across restarts using Docker volumes.
+
+---
+
+## 📁 Project Structure
+
+```text
+sentiment-platform/
+├── backend/        # Backend API service
+├── worker/         # Redis consumer and AI processing
+├── ingester/       # Data ingestion service
+├── frontend/       # React dashboard
+├── docker-compose.yml
+├── .env.example
+├── README.md
+├── ARCHITECTURE.md
+```
+
+---
+
+## 📄 Notes
+
+* The system initializes automatically on startup (no manual DB setup required)
+* Redis consumer groups are created programmatically
+* Services communicate only via defined interfaces (Redis, HTTP, WebSocket)
+
+---
+
+## 📜 License
+
+This project is created for educational and evaluation purposes.

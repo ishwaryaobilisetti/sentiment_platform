@@ -29,6 +29,8 @@ health_checks:
 tests:
   run:
     - docker-compose exec backend pytest -v
+    - docker-compose exec backend pytest --cov=. --cov-report=term
+  coverage_requirement: ">= 70%"
   
 notes:
   - No hardcoded credentials are included
